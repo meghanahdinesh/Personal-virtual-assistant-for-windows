@@ -29,3 +29,10 @@ pip install speechrecognition pyttsx3 pyaudio wikipedia pyjokes
 ## ▶ How to Run
 
 python assistant.py
+## ⚙️ Installation
+
+```bash
+git clone https://github.com/meghanahdinesh/Personal-virtual-assistant-for-windows.git
+cd Personal-virtual-assistant-for-windows
+pip install -r requirements.txt
+python assistant.py
