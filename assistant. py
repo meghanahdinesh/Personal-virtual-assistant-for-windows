@@ -1,0 +1,82 @@
+import speech_recognition as sr
+import pyttsx3
+import datetime
+import webbrowser
+import os
+import wikipedia
+import pyjokes
+
+engine = pyttsx3.init()
+engine.setProperty('rate', 170)
+
+def speak(text):
+    engine.say(text)
+    engine.runAndWait()
+
+def greet():
+    hour = datetime.datetime.now().hour
+    if hour < 12:
+        speak("Good Morning!")
+    elif hour < 18:
+        speak("Good Afternoon!")
+    else:
+        speak("Good Evening!")
+    speak("I am your personal assistant. How can I help you?")
+
+def take_command():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.adjust_for_ambient_noise(source)
+        audio = r.listen(source)
+
+    try:
+        command = r.recognize_google(audio)
+        print("You said:", command)
+        return command.lower()
+    except:
+        return ""
+
+def run_assistant():
+    greet()
+    
+    while True:
+        command = take_command()
+
+        if "time" in command:
+            time = datetime.datetime.now().strftime("%I:%M %p")
+            speak(f"The time is {time}")
+
+        elif "date" in command:
+            date = datetime.datetime.now().strftime("%B %d, %Y")
+            speak(f"Today's date is {date}")
+
+        elif "search" in command:
+            query = command.replace("search", "")
+            webbrowser.open(f"https://www.google.com/search?q={query}")
+            speak("Here are the search results")
+
+        elif "wikipedia" in command:
+            query = command.replace("wikipedia", "")
+            result = wikipedia.summary(query, sentences=2)
+            speak(result)
+
+        elif "open youtube" in command:
+            webbrowser.open("https://www.youtube.com")
+            speak("Opening YouTube")
+
+        elif "play music" in command:
+            music_dir = "C:\\Users\\YourName\\Music"
+            songs = os.listdir(music_dir)
+            os.startfile(os.path.join(music_dir, songs[0]))
+            speak("Playing music")
+
+        elif "joke" in command:
+            speak(pyjokes.get_joke())
+
+        elif "exit" in command or "stop" in command:
+            speak("Goodbye!")
+            break
+
+greet()
+run_assistant()
